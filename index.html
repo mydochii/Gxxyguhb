@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Feed</title>
+
+<style>
+body{
+    margin:0;
+    background:#0f0f0f;
+    font-family:Arial;
+    color:white;
+}
+.grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    padding:10px;
+    padding-bottom:70px;
+}
+.video-card{
+    display:flex;
+    gap:10px;
+    background:#1a1a1a;
+    padding:8px;
+    border-radius:12px;
+    cursor:pointer;
+}
+.thumb{
+    position:relative;
+    width:140px;
+    flex-shrink:0;
+}
+.thumb video{
+    width:100%;
+    height:90px;
+    object-fit:cover;
+    border-radius:10px;
+}
+.play-overlay{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:26px;
+    background:rgba(0,0,0,0.6);
+    border-radius:50%;
+    padding:6px 10px;
+}
+.title{
+    font-size:13px;
+    color:#ddd;
+    line-height:1.3;
+}
+.navbar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#111;
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    border-top:1px solid #222;
+}
+.navbar div{
+    font-size:12px;
+    opacity:0.7;
+}
+.navbar .active{
+    opacity:1;
+    font-weight:bold;
+}
+#player{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    flex-direction:column;
+}
+#player video{
+    width:95%;
+    max-width:500px;
+}
+#closeBtn{
+    position:absolute;
+    top:15px;
+    right:20px;
+    font-size:30px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div id="app" class="grid"></div>
+
+<div class="navbar">
+    <div class="active">Home</div>
+    <div>Trending</div>
+    <div>Profile</div>
+</div>
+
+<div id="player">
+    <span id="closeBtn">✕</span>
+    <video id="mainVideo" controls playsinline></video>
+</div>
+
+<script>
+const ad = "https://otieu.com/4/10005133";
+
+const videoList = [
+  ["https://cdn.videy.co/fthvMAdE1.mp4","M4L4M B3RDU4 T3N4NG"],
+  ["https://cdn.videy.co/aD0Kc2Cz1.mp4","S4AT B3RDU4 B3RS4M4"],
+  ["https://cdn.videy.co/0wu440X91.mp4","D14M Y4NG M3ND3K4T"],
+  ["https://cdn.videy.co/3aigsCib1.mp4","K3D3K4T4N T4NP4 K4T4"],
+  ["https://cdn.videy.co/jvgNmLiS1.mp4","M4L4M S3N94P B3RDU4"],
+  ["https://cdn.videy.co/PRv1A2qw1.mp4","R4S4 N94M4N B3RDU4"],
+  ["https://cdn.videy.co/7pwoWWbf1.mp4","B3RDU4 D14M S4TU R4S4"],
+  ["https://cdn.videy.co/RSvvO6Z71.mp4","S3N94P D4L4M K4M4R"],
+  ["https://cdn.videy.co/UOHQRDKV1.mp4","M4L4M T4NP4 G4N99V4N"],
+  ["https://cdn.videy.co/yafa2FAo1.mp4","D14M B3RDU4 L4M4"],
+  ["https://cdn.videy.co/HRbS8THs1.mp4","P4SUTR1 D14M K3H3N1NG4N"],
+  ["https://cdn.videy.co/Ixigtef21.mp4","K3D3K4T4N Y4NG T3R4S4"],
+  ["https://cdn.videy.co/7ULt71Dv1.mp4","B3RDU4 T4NP4 J4R4K"],
+  ["https://cdn.videy.co/nFWeJvQx1.mp4","M4L4M H4N94T D14M"],
+  ["https://cdn.videy.co/QabSuKG01.mp4","S4AT D14M B3RDU4"]
+];
+
+const app = document.getElementById("app");
+const player = document.getElementById("player");
+const mainVideo = document.getElementById("mainVideo");
+const closeBtn = document.getElementById("closeBtn");
+
+videoList.forEach(v => {
+
+    const card = document.createElement("div");
+    card.className = "video-card";
+
+    const thumb = document.createElement("div");
+    thumb.className = "thumb";
+
+    const vid = document.createElement("video");
+    vid.src = v[0];
+    vid.muted = true;
+    vid.preload = "metadata";
+    vid.playsInline = true;
+
+    const play = document.createElement("div");
+    play.className = "play-overlay";
+    play.innerHTML = "▶";
+
+    thumb.appendChild(vid);
+    thumb.appendChild(play);
+
+    const title = document.createElement("div");
+    title.className = "title";
+    title.innerHTML = v[1];
+
+    card.appendChild(thumb);
+    card.appendChild(title);
+    app.appendChild(card);
+
+    card.onclick = () => {
+        player.style.display = "flex";
+        mainVideo.src = v[0];
+        mainVideo.currentTime = 0;
+        mainVideo.play();
+
+        // IKLAN AWAL (KLIK)
+        window.open(ad,"_blank");
+
+        let ad20 = false;
+        let ad40 = false;
+
+        mainVideo.ontimeupdate = () => {
+            const t = Math.floor(mainVideo.currentTime);
+
+            if(t >= 20 && !ad20){
+                ad20 = true;
+                window.open(ad,"_blank");
+            }
+
+            if(t >= 40 && !ad40){
+                ad40 = true;
+                window.open(ad,"_blank");
+            }
+        };
+    };
+});
+
+closeBtn.onclick = () => {
+    mainVideo.pause();
+    mainVideo.src = "";
+    player.style.display = "none";
+};
+</script>
+
+</body>
+</html>
